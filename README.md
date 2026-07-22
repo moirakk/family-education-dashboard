@@ -1,65 +1,39 @@
 # Family Education Dashboard
 
-[![Next.js](https://img.shields.io/badge/Next.js_15-App%20Router-000?style=flat-square&logo=nextdotjs)](https://nextjs.org/)
-[![React](https://img.shields.io/badge/React_19-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Supabase](https://img.shields.io/badge/Supabase-Postgres%20%2B%20Auth-3ecf8e?style=flat-square&logo=supabase&logoColor=white)](https://supabase.com/)
-[![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+多孩家庭教育管理系统 —— 把每个孩子的日程、学习记录和成长规划放进同一块面板。
 
-A calm, mobile-first workspace for parents managing education across multi-child households. Coordinate schedules, track progress, plan goals, and organize resources — all in one place.
+## 为什么做这个
 
-> **Status:** MVP pilot with three children. Architecture supports any family size and a future SaaS model.
+家里有不止一个孩子的人都懂：学校通知在群里、补习安排在纸质日历上、考试成绩在各种 App 里、学习资料散落在网盘各处。孩子每多一个，混乱程度不是翻倍，是指数级增长。
 
-## The Problem
+我找遍了市面上的同类产品，要么是给学校用的，要么是给单个学生用的，没有一个真正站在"管理一整个家庭的教育"这个视角上。于是干脆自己做一个——从我家三个孩子的真实需求出发，先让自己家用起来，再考虑它能不能帮到别的家庭。
 
-Parents juggle each child's education across school portals, messaging apps, paper calendars, tutoring notes, and scattered cloud folders. More children = exponentially more chaos.
+## 核心功能
 
-**Family Education Dashboard** turns that fragmented workflow into a unified family education operating system.
+- **家庭总览** — 本周日程、学习时长、目标进度一屏看清，按周为单位掌握全家节奏
+- **多孩管理** — 动态增删孩子档案，一键切换视角查看每个孩子的详情
+- **统一日历** — 学校、补习、活动、考试、家庭事项收进同一个日历，按类别和孩子筛选
+- **成长记录** — 学习记录、时长统计、学科表现，沉淀成可回顾的成长轨迹
+- **教育路线图** — 长期目标拆成里程碑，考试时间线和进度追踪一目了然
+- **资源中心** — 文件、笔记、习题、链接按学科打标签，不再翻网盘
 
-## Product Modules
+当前为 MVP 阶段：前端完整可用（mock 数据驱动），Supabase 数据库 Schema 与 RLS 策略已就绪，下一步接入真实数据与认证。
 
-| Module | What it does |
-|--------|-------------|
-| **Dashboard** | Weekly overview, upcoming events, study-time metrics, growth summary |
-| **Child Management** | Dynamic add/edit/delete profiles, per-child details and switching |
-| **Unified Calendar** | School, tutoring, activities, exams, family events in one view |
-| **Growth Tracking** | Learning records, study duration, subject performance, monthly reports |
-| **Education Roadmap** | Goals, milestones, exam timelines, progress tracking |
-| **Resource Center** | Files, notes, worksheets, links, books — tagged by subject |
+## Stack
 
-## Architecture
+![Next.js](https://img.shields.io/badge/Next.js_15-000000?style=flat-square&logo=nextdotjs&logoColor=white)
+![React](https://img.shields.io/badge/React_19-61DAFB?style=flat-square&logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-3FCF8E?style=flat-square&logo=supabase&logoColor=white)
 
-```mermaid
-flowchart TD
-  UI["Next.js 15 App Router"] --> Components["Product Components"]
-  Components --> Domain["Typed Domain Models"]
-  UI --> Actions["Server Actions / Route Handlers"]
-  Actions --> Supabase["Supabase"]
-  Supabase --> Auth["Auth"]
-  Supabase --> Postgres["PostgreSQL + RLS"]
-  Supabase --> Storage["Storage"]
-  Vercel["Vercel"] --> UI
-```
-
-## Tech Stack
-
-`Next.js 15` `React 19` `TypeScript` `TailwindCSS` `Radix UI` `Lucide Icons` `Supabase` `PostgreSQL` `Vercel`
-
-## Quick Start
+## 快速开始
 
 ```bash
 npm install
 npm run dev
 ```
 
-Quality checks:
-
-```bash
-npm run lint
-npm run typecheck
-```
-
-For Supabase integration, create `.env.local`:
+接入 Supabase 时创建 `.env.local`：
 
 ```bash
 NEXT_PUBLIC_SUPABASE_URL="https://your-project.supabase.co"
@@ -67,54 +41,8 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY="your-anon-key"
 SUPABASE_SERVICE_ROLE_KEY="server-only-service-role-key"
 ```
 
-## Data Model
+数据库结构见 [docs/database-schema.sql](./docs/database-schema.sql)，产品设计见 [docs/product-architecture.md](./docs/product-architecture.md)。
 
-```text
-families
-  ├── family_members          # user roles & membership
-  ├── children                # profiles & school info
-  │     ├── calendar_events   # unified event model
-  │     ├── learning_records  # study activity & performance
-  │     ├── monthly_reports   # per-child monthly summaries
-  │     ├── education_goals   # long-term goals
-  │     │     └── milestones  # goal milestones
-  │     └── resources         # files, notes, links, materials
-```
+---
 
-Full schema: [docs/database-schema.sql](./docs/database-schema.sql)
-
-## MVP Status
-
-**Done:**
-Mobile-first dashboard, multi-child data model, dynamic child CRUD, weekly overview, unified calendar, growth tracking, education roadmap, resource center, Supabase-ready schema with RLS.
-
-**Next:**
-- [ ] Replace mock data with Supabase queries
-- [ ] Auth & family membership onboarding
-- [ ] Supabase Storage upload flow
-- [ ] Deploy to Vercel
-- [ ] Test coverage for core workflows
-
-## Roadmap
-
-| Phase | Milestone |
-|-------|-----------|
-| 1 | Single-family MVP with core dashboard |
-| 2 | Authenticated workspace with persistent CRUD |
-| 3 | Invitations, caregiver roles, sharing |
-| 4 | Subscription billing, calendar sync, reminders |
-| 5 | AI-assisted reports & personalized roadmap |
-
-## Design Philosophy
-
-Inspired by Apple Education, Linear, Notion, and Stripe Dashboard — calm hierarchy, dense but readable layouts, mobile-first, minimal friction.
-
-## Documentation
-
-- [Product Architecture](./docs/product-architecture.md)
-- [Database Schema](./docs/database-schema.sql)
-- [Wireframes](./docs/wireframes.md)
-
-## License
-
-Published as a portfolio MVP. A formal license will be added before external reuse or commercialization.
+<sub>先解决自己家的问题，再谈别人的。</sub>
